@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     final themeController = Get.put(ThemeController());
-    final loadTheme = themeController.loadThemePreference();
     return GetMaterialApp(
       title: "Simple Note App",
       debugShowCheckedModeBanner: false,
