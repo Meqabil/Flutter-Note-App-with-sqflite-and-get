@@ -16,7 +16,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notes"),
+        title: Text("m_title".tr),
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert),
@@ -38,7 +38,6 @@ class _HomeState extends State<Home> {
                 PopupMenuItem(
                     onTap: (){
                       db.deleteDataBase();
-                      Get.offUntil(MaterialPageRoute(builder: (context) => const Home()), (context) => false);
                     },
                     child:  Row(
                       children: [

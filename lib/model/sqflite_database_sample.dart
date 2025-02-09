@@ -58,6 +58,10 @@ class SqlDB {
   deleteDataBase() async{
     String dbp = await getDatabasesPath();
     String path = join(dbp,"file.db");
+    if(_database != null){
+      await _database!.close();
+      _database = null;
+    }
     await deleteDatabase(path);
   }
 }

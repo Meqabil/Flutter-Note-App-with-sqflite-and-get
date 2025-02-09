@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
                 PopupMenuItem(
                     onTap: (){
                       db.deleteDataBase();
-                      Get.offUntil(MaterialPageRoute(builder: (context) => const Home()), (context) => false);
+                      Get.offUntil(MaterialPageRoute(builder: (context)=> const Home()), (context)=> false);
                     },
                     child:  Row(
                       children: [
@@ -48,7 +48,6 @@ class _HomeState extends State<Home> {
                 ),
               ];
             },
-
           ),
         ],
       ),

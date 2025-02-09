@@ -37,7 +37,7 @@ class SqlDB {
   }
   insertData(String sql,List<dynamic> arguments) async {
     Database? myDB = await db;
-    int response = await myDB!.rawInsert(sql);
+    int response = await myDB!.rawInsert(sql,arguments);
     return response;
   }
   updateData(String sql) async {
@@ -58,6 +58,9 @@ class SqlDB {
   deleteDataBase() async{
     String dbp = await getDatabasesPath();
     String path = join(dbp,"file.db");
+    if(_database != null){
+      await _database!.close();
+    }
     await deleteDatabase(path);
   }
 }

@@ -13,10 +13,9 @@ class BasicWidget extends StatefulWidget {
 
 class _BasicWidgetState extends State<BasicWidget> {
   SqlDB db = SqlDB();
-  List<Map> data = [];
-  Future<void> getData() async {
+  Future<List<Map>> getData() async {
     List<Map> response = await db.readData("select * from 'notes'");
-    data = response;
+    return response;
   }
   Future<void> _refresh() async {
     await Future.delayed(const Duration(seconds: 1));
@@ -25,11 +24,7 @@ class _BasicWidgetState extends State<BasicWidget> {
     });
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    getData();
-  }
+
   List<Color> lightColors = [Colors.pink,Colors.orangeAccent,Colors.green,Colors.red,Colors.blue,Colors.deepPurple];
   @override
   Widget build(BuildContext context) {
@@ -39,49 +34,52 @@ class _BasicWidgetState extends State<BasicWidget> {
         onRefresh: _refresh,
         child: FutureBuilder(
           future: getData(),
-          builder: (context, snapshot) {
-            return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context,index){
-                return InkWell(
-                  onTap: (){
-                    Get.to(()=> EditNotes(note: data[index]['note'], title: data[index]['title'], id: data[index]['id']));
-                  },
-                  child: Card(
-                    color: lightColors[index % 4],
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 8),
-                              child: Text("${data[index]['title']}",
-                                style: const TextStyle(color: Color(0xffdcdcdc),fontSize: 18,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),
+          builder: (BuildContext context,AsyncSnapshot<List<Map>> snapshot) {
+            if(snapshot.hasData){
+              return ListView.builder(
+                itemCount: snapshot.data?.length,
+                itemBuilder: (context,index){
+                  return InkWell(
+                    onTap: (){
+                      Get.to(()=> EditNotes(note:snapshot. data?[index]['note'], title:snapshot. data?[index]['title'], id:snapshot. data?[index]['id']));
+                    },
+                    child: Card(
+                      color: lightColors[index % 4],
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10,),
+                          Row(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 8),
+                                child: Text("${snapshot.data?[index]['title']}",
+                                  style: const TextStyle(color: Color(0xffdcdcdc),fontSize: 18,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),
+                                ),
                               ),
-                            ),
-                            const Spacer(),
-                            SizedBox(
-                                height: 30,
-                                width: 30,
-                                child: DropOptionMenu(id: data[index]['id'], title: data[index]['title'], note: data[index]['note']))
-                          ],
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
-                          child: Text("${data[index]['note']}",
-                            style: const TextStyle(color: Colors.white,fontSize: 13,overflow: TextOverflow.ellipsis),
+                              const Spacer(),
+                              SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: DropOptionMenu(id:snapshot. data?[index]['id'], title:snapshot. data?[index]['title'], note:snapshot. data?[index]['note']))
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 6,),
-                      ],
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
+                            child: Text("${snapshot.data?[index]['note']}",
+                              style: const TextStyle(color: Colors.white,fontSize: 13,overflow: TextOverflow.ellipsis),
+                            ),
+                          ),
+                          const SizedBox(height: 6,),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
+                  );
+                },
+              );
+            }
+            return const Center(child: CircularProgressIndicator(),);
           },
         )
       ),
