@@ -24,6 +24,13 @@ class _EditNotesState extends State<EditNotes> {
     title.text = widget.title;
     note.text = widget.note;
   }
+
+  @override
+  void dispose() {
+    title.dispose();
+    note.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
